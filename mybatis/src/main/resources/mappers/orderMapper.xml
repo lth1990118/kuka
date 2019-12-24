@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.generate.dao.orderMapper" >
+  <resultMap id="BaseResultMap" type="com.generate.pojo.order" >
+    <id column="ID" property="id" />
+    <result column="OrderName" property="ordername"/>
+    <result column="Createdon" property="createdon"/>
+    <result column="Price" property="price"/>
+    <association property="user" resultMap="userMap"/>
+  </resultMap>
+  <resultMap id="userMap" type="com.generate.pojo.user" >
+    <id column="User_ID" property="id" />
+    <result column="User_Name" property="name"/>
+    <result column="User_Desc" property="desc"/>
+    <result column="User_Sex" property="sex"/>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    o.ID, o.OrderName, o.Createdon, o.[User] as uid, o.Price,u.id as User_ID,u.name as User_Name,u.[desc] as User_Desc,u.sex as User_Sex
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from [Order] o
+    left join [User] u on u.id=o.[user]
+    where o.ID = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from Order
+    where ID = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.generate.pojo.order"  useGeneratedKeys="true"
+          keyProperty="id">
+    insert into [Order] ( OrderName,[user], Createdon,Price)
+    values (#{ordername},#{user.id},#{createdon},#{price})
+  </insert>
+<!--  <insert id="insertSelective" parameterType="com.generate.pojo.order" >-->
+<!--    insert into Order-->
+<!--    <trim prefix="(" suffix=")" suffixOverrides="," >-->
+<!--      <if test="id != null" >-->
+<!--        ID,-->
+<!--      </if>-->
+<!--      <if test="ordername != null" >-->
+<!--        OrderName,-->
+<!--      </if>-->
+<!--      <if test="createdon != null" >-->
+<!--        Createdon,-->
+<!--      </if>-->
+<!--      <if test="user != null" >-->
+<!--        User,-->
+<!--      </if>-->
+<!--      <if test="price != null" >-->
+<!--        Price,-->
+<!--      </if>-->
+<!--    </trim>-->
+<!--    <trim prefix="values (" suffix=")" suffixOverrides="," >-->
+<!--      <if test="id != null" >-->
+<!--        #{id,jdbcType=INTEGER},-->
+<!--      </if>-->
+<!--      <if test="ordername != null" >-->
+<!--        #{ordername,jdbcType=NVARCHAR},-->
+<!--      </if>-->
+<!--      <if test="createdon != null" >-->
+<!--        #{createdon,jdbcType=TIMESTAMP},-->
+<!--      </if>-->
+<!--      <if test="user != null" >-->
+<!--        #{user,jdbcType=INTEGER},-->
+<!--      </if>-->
+<!--      <if test="price != null" >-->
+<!--        #{price,jdbcType=DECIMAL},-->
+<!--      </if>-->
+<!--    </trim>-->
+<!--  </insert>-->
+<!--  <update id="updateByPrimaryKeySelective" parameterType="com.generate.pojo.order" >-->
+<!--    update Order-->
+<!--    <set >-->
+<!--      <if test="ordername != null" >-->
+<!--        OrderName = #{ordername,jdbcType=NVARCHAR},-->
+<!--      </if>-->
+<!--      <if test="createdon != null" >-->
+<!--        Createdon = #{createdon,jdbcType=TIMESTAMP},-->
+<!--      </if>-->
+<!--      <if test="user != null" >-->
+<!--        User = #{user,jdbcType=INTEGER},-->
+<!--      </if>-->
+<!--      <if test="price != null" >-->
+<!--        Price = #{price,jdbcType=DECIMAL},-->
+<!--      </if>-->
+<!--    </set>-->
+<!--    where ID = #{id,jdbcType=INTEGER}-->
+<!--  </update>-->
+<!--  <update id="updateByPrimaryKey" parameterType="com.generate.pojo.order" >-->
+<!--    update Order-->
+<!--    set OrderName = #{ordername,jdbcType=NVARCHAR},-->
+<!--      Createdon = #{createdon,jdbcType=TIMESTAMP},-->
+<!--      User = #{user,jdbcType=INTEGER},-->
+<!--      Price = #{price,jdbcType=DECIMAL}-->
+<!--    where ID = #{id,jdbcType=INTEGER}-->
+<!--  </update>-->
+</mapper>
