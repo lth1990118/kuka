@@ -1,2 +1,0 @@
-# kuka
-javaproject
