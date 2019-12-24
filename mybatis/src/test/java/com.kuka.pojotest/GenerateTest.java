@@ -47,7 +47,7 @@ public class GenerateTest {
         SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
         SqlSession session = sqlSessionFactory.openSession();
         order order = new order();
-        order.setOrdername("订单2");
+        order.setOrdername("订单3");
         order.setCreatedon(new Date());
         BigDecimal price=new BigDecimal(100);
         order.setPrice(price);
@@ -56,7 +56,8 @@ public class GenerateTest {
         order.setUser(user);
         int i = session.insert("com.generate.dao.orderMapper.insert",order );
         session.commit();;
+        logger.info(order.toString());
+        //session.rollback();  //commit完后再rollback是不起作用的
         session.close();
-        logger.info(i+"");
     }
 }
