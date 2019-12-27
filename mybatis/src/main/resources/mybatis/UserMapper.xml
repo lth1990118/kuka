@@ -31,4 +31,32 @@
             <result column="orderprice" property="price"/>
         </collection>
     </resultMap>
+
+    <select id="selectLazayLoad" resultMap="rm_UserLazayLoad">
+        select
+          c.id id ,
+          c.name name
+        from
+          [user] c
+        where
+          c.id = #{id} ;
+    </select>
+
+    <resultMap id="rm_UserLazayLoad" type="com.kuka.pojo.User" >
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <!--使用collection这个标签可以建立关联属性。多对一关系映射-->
+        <collection property="orders" ofType="com.kuka.pojo.Order" column="id" select="rm_OrderLazayLoad">
+
+        </collection>
+    </resultMap>
+    <!-- 嵌套查询返回商品信息，延迟加载将要执行的sql  resultMap="rm_OrderUser"-->
+    <select id="rm_OrderLazayLoad"  resultType="com.kuka.pojo.Order">
+            select * from [Order] where [User]=#{id}
+    </select>
+    <resultMap id="rm_OrderUser" type="com.kuka.pojo.Order">
+        <id column="orderid" property="id"/>
+        <result column="ordername" property="orderName" />
+        <result column="orderprice" property="price"/>
+    </resultMap>
 </mapper>

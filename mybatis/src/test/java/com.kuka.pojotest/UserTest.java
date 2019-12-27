@@ -22,49 +22,66 @@ import java.util.Date;
 @Slf4j
 public class UserTest {
     private final Logger logger = LoggerFactory.getLogger(UserTest.class);
+
     @Test
     public void testUser() throws IOException {
         String resource = "mybatis-config.xml";
         InputStream inputStream = Resources.getResourceAsStream(resource);
         SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
         SqlSession session = sqlSessionFactory.openSession();
-        User user= new User();
+        User user = new User();
         user.setId(1000);
         user.setUserName("Yzj1999");
-        User userDataTable = session.selectOne("com.kuka.pojo.mapping.user.selectOne",user );
+        User userDataTable = session.selectOne("com.kuka.pojo.mapping.user.selectOne", user);
 //        UserMapper mapper = session.getMapper(IUserMapper.class);
 //        User user = mapper.selectOne(1000);
         logger.info(userDataTable.toString());
     }
+
     @Test
     public void testUserOrder() throws IOException {
         String resource = "mybatis-config.xml";
         InputStream inputStream = Resources.getResourceAsStream(resource);
         SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
         SqlSession session = sqlSessionFactory.openSession();
-        User user=new User();
+        User user = new User();
         user.setId(1000);
-        Order order=new Order();
+        Order order = new Order();
         order.setOrderName("订单1");
         order.setPrice(1010);
         order.setCreatedon(new Date());
         order.setUser(user);
-        session.insert("com.kuka.pojo.mapping.order.insertOrder",order);
-        User userDataTable = session.selectOne("com.kuka.pojo.mapping.user.selectOne",1000);
+        session.insert("com.kuka.pojo.mapping.order.insertOrder", order);
+        User userDataTable = session.selectOne("com.kuka.pojo.mapping.user.selectOne", 1000);
         logger.info(userDataTable.toString());
         session.commit();
         session.close();
     }
+
     @Test
     public void testOrderUser() throws IOException {
         String resource = "mybatis-config.xml";
         InputStream inputStream = Resources.getResourceAsStream(resource);
         SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
         SqlSession session = sqlSessionFactory.openSession();
-        Order orderDataTable = session.selectOne("com.kuka.pojo.mapping.order.selectOne",4);
+        Order orderDataTable = session.selectOne("com.kuka.pojo.mapping.order.selectOne", 4);
         logger.info(orderDataTable.toString());
         session.commit();
         session.close();
+    }
+
+    @Test
+    public void testLazayLoading() throws IOException {
+        String resource = "mybatis-config.xml";
+        InputStream inputStream = Resources.getResourceAsStream(resource);
+        SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
+        SqlSession session = sqlSessionFactory.openSession();
+        User user = session.selectOne("com.kuka.pojo.mapping.user.selectLazayLoad", 1000);
+        logger.info(user.toString());
+        for (Order order : user.getOrders()) {
+            logger.info(order.toString());
+        }
+        logger.info(user.toString());
     }
 
 }

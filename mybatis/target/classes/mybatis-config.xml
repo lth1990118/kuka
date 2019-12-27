@@ -4,6 +4,14 @@
         "http://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
     <properties resource="db.properties"/>
+    <settings>
+        <!-- 启用延迟加载特性，不配置默认关闭该特性-->
+        <setting name="lazyLoadingEnabled" value="true"></setting>
+        <!-- 按需加载: false:使用关联属性，及时加载;    true,加载对象，则加载所有属性， -->
+        <setting name="aggressiveLazyLoading" value="false"/>
+        <!-- 打印sql日志 -->
+        <setting name="logImpl" value="STDOUT_LOGGING" />
+    </settings>
     <environments default="development">
         <environment id="development">
             <transactionManager type="JDBC"/>
